@@ -1,0 +1,5 @@
+*.un~
+*.swp~
+*.egg-info
+*.pyc
+.env
