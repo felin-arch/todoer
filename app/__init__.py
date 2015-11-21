@@ -21,5 +21,5 @@ def main():
         labels = action['labels']
         labels.append(next_action_label['id'])
         logger.debug('{0} is a next action'.format(action['content']))
-        action.update(labels=labels)
-    todoer.commit()
+        # action.update(labels=labels)
+    # todoer.commit()
