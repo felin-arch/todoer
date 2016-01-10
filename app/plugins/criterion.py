@@ -1,5 +1,29 @@
 import logging
 
+class AllCriterion():
+
+    def __init__(self, criteria):
+        self._logger = logging.getLogger('AllCriterion')
+        self._criteria = criteria
+
+    def applies_to(self, item):
+        self._logger.debug('`%s` matches all criteria?', self._get_item_label(item))
+        result = reduce(
+            lambda acc, criteria: acc and criteria.applies_to(item),
+            self._criteria,
+            True
+        )
+        self._logger.debug(result)
+        return result
+
+    def _get_item_label(self, item):
+        if 'content' in item.data:
+            return item['content']
+
+        if 'name' in item.data:
+            return item['name']
+
+
 class AnyCriterion():
 
     def __init__(self, criteria):
@@ -31,7 +55,7 @@ class NegativeCriterion():
         self._criterion = criterion
 
     def applies_to(self, item):
-        self._logger.debug('%s` not matches criteria?', self._get_item_label(item))
+        self._logger.debug('`%s` not matches criterion?', self._get_item_label(item))
         result = not self._criterion.applies_to(item)
         self._logger.debug(result)
         return result
@@ -94,6 +118,7 @@ class ProjectNameStartsWithCriterion():
         self._logger.debug(result)
         return result
 
+
 class ItemsProjectCriterion():
 
     def __init__(self, todoist, criterion):
@@ -105,7 +130,26 @@ class ItemsProjectCriterion():
         self._logger.debug('`%s` resolving project', item['content'])
         items_project = self._todoist.get_project_by_id(item['project_id'])
         self._logger.debug('`%s` resolved project as `%s`', item['content'], items_project['name'])
-        self._logger.debug('`%s` matches criteria?', items_project['name'])
+        self._logger.debug('`%s` matches criterion?', items_project['name'])
         result = self._criterion.applies_to(items_project)
+        self._logger.debug(result)
+        return result
+
+
+class ItemIsNthInProjectCriterion():
+
+    def __init__(self, todoist, n):
+        self._logger = logging.getLogger('ItemsIsNthInProjectCriterion')
+        self._todoist = todoist
+        self._n = n
+
+    def applies_to(self, item):
+        self._logger.debug('`%s` is #%s in project?', item['content'], self._n)
+        project_items = self._todoist.get_items_by_project(item['project_id'])
+        item_orders = map(lambda project_item: project_item['item_order'], project_items)
+        index = self._n - 1
+        if index >= len(item_orders):
+            return False
+        result = item_orders[self._n - 1] == item['item_order']
         self._logger.debug(result)
         return result

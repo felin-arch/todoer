@@ -16,6 +16,7 @@ def main():
     na_finder = NextActionFinder(todoer)
     actions = na_finder.find_next_action_candidates()
     print actions[0]
+    print todoer.get_project_by_id(actions[0]['project_id'])
     logger.debug('got {0} next actions'.format(len(actions)))
     next_action_label = todoer.get_label_by_name(NEXT_ACTION_LABEL)
     for action in actions:
