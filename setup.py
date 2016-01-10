@@ -8,11 +8,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='todoist-na-plugin',
+    name='todoer',
 
     version='0.0.1',
 
-    description='Plugin for next action labeling',
+    description='Plugin for todoist',
     long_description=long_description,
 
     url='git@bitbucket.org:arch_2/todoist-na-plugin.git',
@@ -28,12 +28,10 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
       'todoist-python'
     ],
 
-    # $ pip install -e .[dev,test]
     extras_require={
         'dev': [],
         'test': [],

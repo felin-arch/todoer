@@ -42,6 +42,9 @@ class Todoer():
     def get_item_by_id(self, item_id):
         return self.api.items.get_by_id(item_id)
 
+    def get_project_by_id(self, project_id):
+        return self.api.projects.get_by_id(project_id)
+
     def _get_by_property(self, collection, matcher, property):
         for item in collection:
             if item[property] == matcher:

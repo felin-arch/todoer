@@ -1,8 +1,7 @@
 import logging
-from app.plugins.criterion.haslabel import HasLabelCriterion
-from app.plugins.criterion.any import AnyCriterion
-from app.plugins.criterion.hasduedate import HasDueDateCriterion
-from app.plugins.criterion.negative import NegativeCriterion
+from criterion import ItemHasLabelCriterion, AnyCriterion, ItemHasDueDateCriterion, NegativeCriterion
+from criterion import ProjectNameEqualsCriterion, ProjectNameStartsWithCriterion
+from criterion import ItemsProjectCriterion
 
 class NextActionFinder():
 
@@ -11,29 +10,39 @@ class NextActionFinder():
         self._logger = logging.getLogger('NextActionFinder')
         self._criterion = NegativeCriterion(
             AnyCriterion([
-                HasLabelCriterion(todoist.get_label_by_name('waiting_for')),
-                HasLabelCriterion(todoist.get_label_by_name('next_action')),
-                HasDueDateCriterion()
+                ItemHasLabelCriterion(todoist.get_label_by_name('waiting_for')),
+                ItemHasLabelCriterion(todoist.get_label_by_name('next_action')),
+                ItemHasDueDateCriterion(),
+                ItemsProjectCriterion(self._todoist, ProjectNameEqualsCriterion('| Personal'))
+            ])
+        )
+        self._project_criterion = NegativeCriterion(
+            AnyCriterion([
+                ProjectNameEqualsCriterion('Inbox'),
+                ProjectNameStartsWithCriterion('*')
             ])
         )
 
     def find_next_action_candidates(self):
         next_actions = []
-        for project in self._todoist.projects:
-            if self._should_process_project(project):
-                self._logger.debug('processing project: {0}'.format(project['name']))
-                actions = self._get_next_actions_for_project(project)
-                next_actions.extend(actions)
-            else:
-                self._logger.debug('skipping project: {0}'.format(project['name']))
+        candidate_projects = [
+            p for p in self._todoist.projects
+                if self._project_criterion.applies_to(p)
+        ]
+        for project in candidate_projects:
+            self._logger.debug('processing project: {0}'.format(project['name']))
+            actions = self._get_next_actions_for_project(project)
+            next_actions.extend(actions)
 
         return next_actions
 
     def _should_process_project(self, project):
-        if project['name'] == 'Inbox':
+        a = ProjectNameEqualsCriterion('Inbox')
+        b = ProjectNameStartsWithCriterion('*')
+        if a.applies_to(project) or b.applies_to(project):
             return False
 
-        return not project['name'].startswith('* ')
+        return True
 
     def _get_next_actions_for_project(self, project):
         items = self._todoist.get_items_by_project(project['id'])
