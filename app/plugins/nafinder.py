@@ -1,7 +1,8 @@
 import logging
-from criterion import ItemHasLabelCriterion, AnyCriterion, ItemHasDueDateCriterion, NegativeCriterion, AllCriterion, ItemIsNthInProjectCriterion
-from criterion import ProjectNameEqualsCriterion, ProjectNameStartsWithCriterion
-from criterion import ItemsProjectCriterion
+
+from app.criteria.logical import *
+from app.criteria.item import *
+from app.criteria.project import *
 
 class NextActionFinder():
 
@@ -11,8 +12,8 @@ class NextActionFinder():
         self._criterion = AllCriterion([
             NegativeCriterion(
                 AnyCriterion([
-                    ItemHasLabelCriterion(todoist.get_label_by_name('waiting_for')),
-                    ItemHasLabelCriterion(todoist.get_label_by_name('next_action')),
+                    self._build_label_criterion('waiting_for'),
+                    self._build_label_criterion('next_action'),
                     ItemHasDueDateCriterion()
                 ])
             ),
@@ -23,11 +24,16 @@ class NextActionFinder():
                 ])
             )),
             AnyCriterion([
-                ItemsProjectCriterion(self._todoist, ProjectNameStartsWithCriterion('|')),
-                ItemIsNthInProjectCriterion(self._todoist, 5)
+                ItemsProjectCriterion(
+                    self._todoist, ProjectNameStartsWithCriterion('|')),
+                ItemIsNthInProjectCriterion(self._todoist, 1)
             ])
         ])
 
     def find_next_action_candidates(self):
         items = self._todoist.items
         return [item for item in items if self._criterion.applies_to(item)]
+
+    def _build_label_criterion(self, label_name):
+        label = self._todoist.get_label_by_name(label_name)
+        return ItemHasLabelCriterion(label)

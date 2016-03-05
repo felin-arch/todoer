@@ -1,6 +1,7 @@
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
+
+from setuptools import find_packages, setup
 
 here = path.abspath(path.dirname(__file__))
 
@@ -28,12 +29,15 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
+    include_package_data=True,
+
     install_requires=[
-      'todoist-python'
+        'todoist-python',
+        'ruamel.yaml'
     ],
 
     extras_require={
-        'dev': [],
+        'dev': ['nose2', 'pep8', 'autopep8'],
         'test': [],
     },
 

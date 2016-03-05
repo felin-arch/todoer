@@ -1,13 +1,12 @@
 import todoist
-import os
 
-class Todoer():
+class TodoistRepository():
 
     def __init__(self, todoist_api_token):
         self.token = todoist_api_token
         self.api = todoist.TodoistAPI(self.token)
 
-    def refresh(self):
+    def sync(self):
         self.api.sync(resource_types=['items', 'labels', 'projects'])
 
     def commit(self):
@@ -51,8 +50,3 @@ class Todoer():
                 return item
 
         return None
-
-
-    @staticmethod
-    def create():
-        return Todoer(os.getenv('TODOIST_API_TOKEN'))
