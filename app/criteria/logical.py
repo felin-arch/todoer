@@ -42,8 +42,19 @@ class AnyCriterion():
 class NegativeCriterion():
 
     def __init__(self, criterion):
-        self._criterion = criterion
+        self.criterion = criterion
 
     @log('`{item[text]}` not matches criterion?')
     def applies_to(self, item):
-        return not self._criterion.applies_to(item)
+        return not self.criterion.applies_to(item)
+
+
+class AnyOfCriterion():
+
+    def __init__(self, criterion):
+        self.criterion = criterion
+
+    def applies_to(self, items):
+        return any(
+            [self.criterion.applies_to(item) for item in items]
+        )

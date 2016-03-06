@@ -1,8 +1,8 @@
 import unittest
+from unittest.mock import MagicMock, call
 
-from app.criteria.logical import (AllCriterion, AnyCriterion, FalseCriterion,
-                                  NegativeCriterion, TrueCriterion)
-from test.mocks import MockItem
+from app.criteria.logical import *
+from test.mocks import MockItem, MockLabel
 
 
 class TestTrueCriterion(unittest.TestCase):
@@ -60,3 +60,24 @@ class TestNegativeCriterion(unittest.TestCase):
         tc = TrueCriterion()
         nc = NegativeCriterion(tc)
         self.assertFalse(nc.applies_to(MockItem('Anything')))
+
+
+class TestAnyOfCriterion(unittest.TestCase):
+
+    def test_is_True_if_at_least_one_item_is_True(self):
+        c = MagicMock()
+        c.applies_to = MagicMock(side_effect=[False, True])
+        aoc = AnyOfCriterion(c)
+        self.assertTrue(aoc.applies_to([7, 9]))
+        self.assertEquals(
+            c.applies_to.mock_calls,
+            [call.applies_to(7), call.applies_to(9)])
+
+    def test_is_False_if_all_items_are_False(self):
+        c = MagicMock()
+        c.applies_to = MagicMock(side_effect=[False, False])
+        aoc = AnyOfCriterion(c)
+        self.assertFalse(aoc.applies_to([3, 6]))
+        self.assertEquals(
+            c.applies_to.mock_calls,
+            [call.applies_to(3), call.applies_to(6)])
