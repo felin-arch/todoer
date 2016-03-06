@@ -54,6 +54,7 @@ class AnyOfCriterion():
     def __init__(self, criterion):
         self.criterion = criterion
 
+    @log('Any of the {item[count]} items match?')
     def applies_to(self, items):
         return any(
             [self.criterion.applies_to(item) for item in items]

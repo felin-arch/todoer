@@ -17,12 +17,19 @@ class CriteriaLogger():
         CriteriaLogger.indent -= 1
 
     def _merge_call_details(self, call_details):
-        item = call_details[1].data.copy()
-        item['text'] = self._get_item_identifier(item)
+        item = self._get_item(call_details[1])
         return {
             'criterion': call_details[0],
             'item': item
         }
+
+    def _get_item(self, argument):
+        if isinstance(argument, list):
+            return { 'count': len(argument) }
+
+        item = argument.data.copy()
+        item['text'] = self._get_item_identifier(item)
+        return item
 
     def _get_item_identifier(self, item):
         for label in ['content', 'name']:
