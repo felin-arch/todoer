@@ -1,7 +1,7 @@
 import todoist
 
-class TodoistRepository():
 
+class TodoistRepository:
     def __init__(self, todoist_api_token):
         self.token = todoist_api_token
         self.api = todoist.TodoistAPI(self.token)
@@ -36,7 +36,7 @@ class TodoistRepository():
             if item['project_id'] == project_id:
                 items.append(item)
 
-        return sorted(items, key=lambda item: item['item_order'])
+        return sorted(items, key=lambda project_item: project_item['item_order'])
 
     def get_item_by_id(self, item_id):
         return self.api.items.get_by_id(item_id)
@@ -44,9 +44,13 @@ class TodoistRepository():
     def get_project_by_id(self, project_id):
         return self.api.projects.get_by_id(project_id)
 
-    def _get_by_property(self, collection, matcher, property):
+    def get_label_by_id(self, label_id):
+        return self.api.labels.get_by_id(label_id)
+
+    @staticmethod
+    def _get_by_property(collection, matcher, property_name):
         for item in collection:
-            if item[property] == matcher:
+            if item[property_name] == matcher:
                 return item
 
         return None

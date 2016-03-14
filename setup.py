@@ -33,11 +33,11 @@ setup(
 
     install_requires=[
         'todoist-python',
-        'ruamel.yaml'
+        'ruamel.yaml',
     ],
 
     extras_require={
-        'dev': ['nose2', 'pep8', 'autopep8'],
+        'dev': ['nose2', 'ddt'],
         'test': [],
     },
 

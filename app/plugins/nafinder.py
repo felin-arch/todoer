@@ -3,6 +3,7 @@ import logging
 from app.criteria.logical import *
 from app.criteria.item import *
 from app.criteria.project import *
+from app.criteria.label import *
 
 class NextActionFinder():
 
@@ -12,8 +13,12 @@ class NextActionFinder():
         self._criterion = AllCriterion([
             NegativeCriterion(
                 AnyCriterion([
-                    self._build_label_criterion('waiting_for'),
-                    self._build_label_criterion('next_action'),
+                    ItemsLabelsCriterion(self._todoist, AnyOfCriterion(
+                        AnyCriterion([
+                            LabelNameEqualsCriterion('waiting_for'),
+                            LabelNameEqualsCriterion('next_action')
+                        ])
+                    )),
                     ItemHasDueDateCriterion()
                 ])
             ),

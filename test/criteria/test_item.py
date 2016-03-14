@@ -1,14 +1,12 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
-from app.criteria.item import (ItemHasDueDateCriterion, ItemHasLabelCriterion,
-                               ItemsProjectCriterion, ItemIsNthInProjectCriterion)
+from app.criteria.item import *
 from app.criteria.logical import FalseCriterion, TrueCriterion
 from test.mocks import MockItem, MockLabel, MockProject
 
 
 class TestItemHasLabelCriterion(unittest.TestCase):
-
     def test_item_has_label_returns_True(self):
         l = MockLabel(id=1)
         i = MockItem(labels=[1])
@@ -27,7 +25,6 @@ class TestItemHasLabelCriterion(unittest.TestCase):
 
 
 class TestItemHasDueDate(unittest.TestCase):
-
     def test_item_has_no_due_date_returns_False(self):
         i = MockItem()
 
@@ -44,7 +41,6 @@ class TestItemHasDueDate(unittest.TestCase):
 
 
 class TestItemsProjectCriterion(unittest.TestCase):
-
     def setUp(self):
         self.todoist = MagicMock()
         self.project_id = 1234
@@ -75,8 +71,7 @@ class TestItemsProjectCriterion(unittest.TestCase):
         self.todoist.get_project_by_id.assert_called_with(self.project_id)
 
 
-class TestItemIsNthInProjectCriterio(unittest.TestCase):
-
+class TestItemIsNthInProjectCriterion(unittest.TestCase):
     def test_item_is_nth_in_project_returns_True(self):
         t = MagicMock()
         i = MockItem(item_order=2, project_id=1234)
@@ -100,3 +95,36 @@ class TestItemIsNthInProjectCriterio(unittest.TestCase):
 
         self.assertFalse(ic.applies_to(i))
         t.get_items_by_project.assert_called_with(1234)
+
+
+class TestItemsLabelsCriterion(unittest.TestCase):
+    def setUp(self):
+        self.todoist = MagicMock()
+        self.mockLabels = [MockLabel(id=1), MockLabel(id=2)]
+        self.mockCriteria = MagicMock()
+        self.mockCriteria.applies_to.return_value = True
+
+    def test_given_labels_correctly_resolves_them(self):
+        self.todoist.get_label_by_id = MagicMock(side_effect=self.mockLabels)
+
+        ilc = ItemsLabelsCriterion(self.todoist, self.mockCriteria)
+
+        self.assertTrue(ilc.applies_to(MockItem(labels=[1, 2])))
+        self.assertEquals(
+            self.todoist.get_label_by_id.mock_calls,
+            [call.get_label_by_id(1), call.get_label_by_id(2)]
+        )
+        self.assertEquals(self.mockCriteria.applies_to.mock_calls, [call.applies_to(self.mockLabels)])
+
+    def test_label_does_not_exist_is_not_passed_to_the_inner_criterion(self):
+        self.mockLabels.append(None)
+        self.todoist.get_label_by_id = MagicMock(side_effect=self.mockLabels)
+
+        ilc = ItemsLabelsCriterion(self.todoist, self.mockCriteria)
+
+        self.assertTrue(ilc.applies_to(MockItem(labels=[1, 3, 2])))
+        self.assertEquals(
+            self.todoist.get_label_by_id.mock_calls,
+            [call.get_label_by_id(1), call.get_label_by_id(3), call.get_label_by_id(2)]
+        )
+        self.assertEquals(self.mockCriteria.applies_to.mock_calls, [call.applies_to(self.mockLabels[:2])])
