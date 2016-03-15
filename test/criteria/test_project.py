@@ -1,7 +1,7 @@
 import unittest
 
 from app.criteria.project import *
-from test.mocks import MockItem, MockLabel, MockProject
+from test.mocks import MockProject
 
 
 class TestProjectNameEqualsCriterion(unittest.TestCase):

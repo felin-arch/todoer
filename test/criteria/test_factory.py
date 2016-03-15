@@ -3,6 +3,8 @@ from ddt import ddt, data, unpack
 from app.criteria.factory import CriterionFactory, InvalidCriterionDefinitionError
 from app.criteria.logical import *
 from app.criteria.item import *
+from app.criteria.project import *
+from app.criteria.label import *
 
 
 @ddt
@@ -30,13 +32,11 @@ class TestCriterionFactory(unittest.TestCase):
 
         self.assertEqual(str(ctx.exception), 'No such criterion: non-existent')
 
-    # @data([
-    #     { 'project_name_equals': 'Test' },
-    #     ProjectNameEqualsCriterion,
-    #     { 'project_name': 'Test' }
-    #     ])
-    # @unpack
-    # def test_given_arguments_constructs_criterion(self, definition, klass, state):
-    #     criterion = self.criterion_factory.create(definition)
-    #     self.assertIsInstance(criterion, klass)
-    #     self.assertEquals(criterion.__dict__, state)
+    @data([{'project_name_equals': 'Test'}, ProjectNameEqualsCriterion, {'project_name': 'Test'}],
+          [{'project_name_starts_with': '*'}, ProjectNameStartsWithCriterion, {'name_prefix': '*'}],
+          [{'label_name_equals': 'nice_label'}, LabelNameEqualsCriterion, {'label_name': 'nice_label'}])
+    @unpack
+    def test_given_arguments_constructs_criterion(self, definition, klass, state):
+        criterion = self.criterion_factory.create(definition)
+        self.assertIsInstance(criterion, klass)
+        self.assertEquals(criterion.__dict__, state)

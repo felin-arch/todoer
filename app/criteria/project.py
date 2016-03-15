@@ -1,7 +1,7 @@
 from app.logger import log
 
-class ProjectNameEqualsCriterion():
 
+class ProjectNameEqualsCriterion:
     def __init__(self, project_name):
         self.project_name = project_name
 
@@ -10,11 +10,10 @@ class ProjectNameEqualsCriterion():
         return item['name'] == self.project_name
 
 
-class ProjectNameStartsWithCriterion():
+class ProjectNameStartsWithCriterion:
+    def __init__(self, name_prefix):
+        self.name_prefix = name_prefix
 
-    def __init__(self, name_fragment):
-        self.name_fragment = name_fragment
-
-    @log('`{item[text]}` starts with `{criterion.name_fragment}`?')
+    @log('`{item[text]}` starts with `{criterion.name_prefix}`?')
     def applies_to(self, project):
-        return project['name'].startswith(self.name_fragment)
+        return project['name'].startswith(self.name_prefix)
