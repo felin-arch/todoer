@@ -24,13 +24,13 @@ class TestCriterionFactory(unittest.TestCase):
         with self.assertRaises(InvalidCriterionDefinitionError) as ctx:
             self.criterion_factory.create({'true': '', 'false': ''})
 
-        self.assertEqual(str(ctx.exception), 'Definition should only have a single key')
+        self.assertEquals(str(ctx.exception), 'Definition should only have a single key')
 
     def test_given_nonexistent_criterion_raises_error(self):
         with self.assertRaises(InvalidCriterionDefinitionError) as ctx:
             self.criterion_factory.create({'non-existent': ''})
 
-        self.assertEqual(str(ctx.exception), 'No such criterion: non-existent')
+        self.assertEquals(str(ctx.exception), 'No such criterion: non-existent')
 
     @data([{'project_name_equals': 'Test'}, ProjectNameEqualsCriterion, {'project_name': 'Test'}],
           [{'project_name_starts_with': '*'}, ProjectNameStartsWithCriterion, {'name_prefix': '*'}],
