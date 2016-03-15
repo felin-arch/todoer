@@ -11,7 +11,7 @@ class NextActionFinder():
         self._todoist = todoist
         self._logger = logging.getLogger('NextActionFinder')
         self._criterion = AllCriterion([
-            NegativeCriterion(
+            NotCriterion(
                 AnyCriterion([
                     LabelsOfItemCriterion(self._todoist, AnyOfCriterion(
                         AnyCriterion([
@@ -22,7 +22,7 @@ class NextActionFinder():
                     ItemHasDueDateCriterion()
                 ])
             ),
-            ProjectOfItemCriterion(self._todoist, NegativeCriterion(
+            ProjectOfItemCriterion(self._todoist, NotCriterion(
                 AnyCriterion([
                     ProjectNameEqualsCriterion('Inbox'),
                     ProjectNameStartsWithCriterion('*')

@@ -35,7 +35,7 @@ class AnyCriterion:
         )
 
 
-class NegativeCriterion:
+class NotCriterion:
     def __init__(self, criterion):
         self.criterion = criterion
 

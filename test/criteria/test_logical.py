@@ -49,16 +49,16 @@ class TestAnyCriterion(unittest.TestCase):
         self.assertTrue(ac.applies_to(MockItem('Anything')))
 
 
-class TestNegativeCriterion(unittest.TestCase):
+class TestNotCriterion(unittest.TestCase):
 
     def test_is_True_if_inner_is_False(self):
         fc = FalseCriterion()
-        nc = NegativeCriterion(fc)
+        nc = NotCriterion(fc)
         self.assertTrue(nc.applies_to(MockItem('Anything')))
 
     def test_is_False_if_inner_is_True(self):
         tc = TrueCriterion()
-        nc = NegativeCriterion(tc)
+        nc = NotCriterion(tc)
         self.assertFalse(nc.applies_to(MockItem('Anything')))
 
 
