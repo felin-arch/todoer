@@ -5,3 +5,4 @@
 .env
 .tox
 __pycache__
+.idea
