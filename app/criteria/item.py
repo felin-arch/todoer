@@ -16,7 +16,7 @@ class ItemHasDueDateCriterion:
         return item['due_date'] is not None
 
 
-class ItemsProjectCriterion:
+class ProjectOfItemCriterion:
     def __init__(self, todoist, criterion):
         self._todoist = todoist
         self.criterion = criterion
@@ -47,7 +47,7 @@ class ItemIsNthInProjectCriterion:
         return item_orders[index] == item['item_order']
 
 
-class ItemsLabelsCriterion:
+class LabelsOfItemCriterion:
     def __init__(self, todoist, criterion):
         self._todoist = todoist
         self.criterion = criterion

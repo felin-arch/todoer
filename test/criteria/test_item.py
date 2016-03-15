@@ -40,7 +40,7 @@ class TestItemHasDueDate(unittest.TestCase):
         self.assertTrue(ic.applies_to(i))
 
 
-class TestItemsProjectCriterion(unittest.TestCase):
+class TestProjectOfItemCriterion(unittest.TestCase):
     def setUp(self):
         self.todoist = MagicMock()
         self.project_id = 1234
@@ -49,7 +49,7 @@ class TestItemsProjectCriterion(unittest.TestCase):
     def test_no_such_project_returns_False(self):
         self.todoist.get_project_by_id.return_value = None
 
-        ic = ItemsProjectCriterion(self.todoist, TrueCriterion())
+        ic = ProjectOfItemCriterion(self.todoist, TrueCriterion())
 
         self.assertFalse(ic.applies_to(self.mockItem))
         self.todoist.get_project_by_id.assert_called_with(self.project_id)
@@ -57,7 +57,7 @@ class TestItemsProjectCriterion(unittest.TestCase):
     def test_project_criteria_matches_returns_True(self):
         self.todoist.get_project_by_id.return_value = MockProject()
 
-        ic = ItemsProjectCriterion(self.todoist, TrueCriterion())
+        ic = ProjectOfItemCriterion(self.todoist, TrueCriterion())
 
         self.assertTrue(ic.applies_to(self.mockItem))
         self.todoist.get_project_by_id.assert_called_with(self.project_id)
@@ -65,7 +65,7 @@ class TestItemsProjectCriterion(unittest.TestCase):
     def test_project_criteria_does_not_match_returns_False(self):
         self.todoist.get_project_by_id.return_value = MockProject()
 
-        ic = ItemsProjectCriterion(self.todoist, FalseCriterion())
+        ic = ProjectOfItemCriterion(self.todoist, FalseCriterion())
 
         self.assertFalse(ic.applies_to(self.mockItem))
         self.todoist.get_project_by_id.assert_called_with(self.project_id)
@@ -97,7 +97,7 @@ class TestItemIsNthInProjectCriterion(unittest.TestCase):
         t.get_items_by_project.assert_called_with(1234)
 
 
-class TestItemsLabelsCriterion(unittest.TestCase):
+class TestLabelsOfItemCriterion(unittest.TestCase):
     def setUp(self):
         self.todoist = MagicMock()
         self.mockLabels = [MockLabel(id=1), MockLabel(id=2)]
@@ -107,9 +107,9 @@ class TestItemsLabelsCriterion(unittest.TestCase):
     def test_given_labels_correctly_resolves_them(self):
         self.todoist.get_label_by_id = MagicMock(side_effect=self.mockLabels)
 
-        ilc = ItemsLabelsCriterion(self.todoist, self.mockCriteria)
+        criterion = LabelsOfItemCriterion(self.todoist, self.mockCriteria)
 
-        self.assertTrue(ilc.applies_to(MockItem(labels=[1, 2])))
+        self.assertTrue(criterion.applies_to(MockItem(labels=[1, 2])))
         self.assertEquals(
             self.todoist.get_label_by_id.mock_calls,
             [call.get_label_by_id(1), call.get_label_by_id(2)]
@@ -120,9 +120,9 @@ class TestItemsLabelsCriterion(unittest.TestCase):
         self.mockLabels.append(None)
         self.todoist.get_label_by_id = MagicMock(side_effect=self.mockLabels)
 
-        ilc = ItemsLabelsCriterion(self.todoist, self.mockCriteria)
+        criterion = LabelsOfItemCriterion(self.todoist, self.mockCriteria)
 
-        self.assertTrue(ilc.applies_to(MockItem(labels=[1, 3, 2])))
+        self.assertTrue(criterion.applies_to(MockItem(labels=[1, 3, 2])))
         self.assertEquals(
             self.todoist.get_label_by_id.mock_calls,
             [call.get_label_by_id(1), call.get_label_by_id(3), call.get_label_by_id(2)]

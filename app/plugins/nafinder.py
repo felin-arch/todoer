@@ -13,7 +13,7 @@ class NextActionFinder():
         self._criterion = AllCriterion([
             NegativeCriterion(
                 AnyCriterion([
-                    ItemsLabelsCriterion(self._todoist, AnyOfCriterion(
+                    LabelsOfItemCriterion(self._todoist, AnyOfCriterion(
                         AnyCriterion([
                             LabelNameEqualsCriterion('waiting_for'),
                             LabelNameEqualsCriterion('next_action')
@@ -22,14 +22,14 @@ class NextActionFinder():
                     ItemHasDueDateCriterion()
                 ])
             ),
-            ItemsProjectCriterion(self._todoist, NegativeCriterion(
+            ProjectOfItemCriterion(self._todoist, NegativeCriterion(
                 AnyCriterion([
                     ProjectNameEqualsCriterion('Inbox'),
                     ProjectNameStartsWithCriterion('*')
                 ])
             )),
             AnyCriterion([
-                ItemsProjectCriterion(
+                ProjectOfItemCriterion(
                     self._todoist, ProjectNameStartsWithCriterion('|')),
                 ItemIsNthInProjectCriterion(self._todoist, 1)
             ])
