@@ -1,53 +1,31 @@
-from app.criteria.logical import *
-from app.criteria.item import *
-from app.criteria.project import *
-from app.criteria.label import *
-
-MAPPING = {
-    'true': TrueCriterion,
-    'false': FalseCriterion,
-
-    'item_has_due_date': ItemHasDueDateCriterion,
-
-    'project_name_equals': ProjectNameEqualsCriterion,
-    'project_name_starts_with': ProjectNameStartsWithCriterion,
-
-    'label_name_equals': LabelNameEqualsCriterion
-}
+from app.criteria.repository import CriteriaRepository
 
 
 class CriterionFactory:
-    def __init__(self):
-        pass
+    def __init__(self, modules):
+        self._criteria_repository = CriteriaRepository(modules)
+        self._criteria_repository.load_criteria()
 
-    def create(self, definition):
-        return self._construct_criterion(*self._unpack_definition(definition))
+    def create(self, descriptor):
+        return self._construct_criterion(*self._unpack_descriptor(descriptor))
 
     @staticmethod
-    def _unpack_definition(definition):
-        if len(definition.keys()) is not 1:
-            raise InvalidCriterionDefinitionError('Definition should only have a single key')
+    def _unpack_descriptor(descriptor):
+        if len(descriptor.keys()) is not 1:
+            raise InvalidCriterionDescriptorError('Descriptor should only have a single key')
 
-        return definition.popitem()
+        return descriptor.popitem()
 
     def _construct_criterion(self, criterion_type, arguments):
-        criterion_class = self._get_criterion_class(criterion_type)
+        definition = self._criteria_repository.get_criterion_definition(criterion_type)
         prepared_arguments = self._prepare_arguments(arguments)
 
-        return criterion_class(*prepared_arguments)
-
-    @staticmethod
-    def _get_criterion_class(criterion_type):
-        if criterion_type not in MAPPING:
-            raise InvalidCriterionDefinitionError(
-                'No such criterion: {0}'.format(criterion_type))
-
-        return MAPPING[criterion_type]
+        return definition['class'](*prepared_arguments)
 
     @staticmethod
     def _prepare_arguments(arguments):
         return [arg for arg in [arguments] if arg is not '']
 
 
-class InvalidCriterionDefinitionError(RuntimeError):
+class InvalidCriterionDescriptorError(RuntimeError):
     pass
