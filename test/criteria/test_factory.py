@@ -57,3 +57,18 @@ class TestCriterionFactory(unittest.TestCase):
         self.assertIsInstance(criterion, AllCriterion)
         self.assertIsInstance(criterion.criteria[0], TrueCriterion)
         self.assertIsInstance(criterion.criteria[1], FalseCriterion)
+
+    def test_given_todoist_repository_injection_should_construct_correctly(self):
+        definition = {'project_of_item': {'true': ''}}
+        criterion = self.criterion_factory.create(definition)
+        self.assertIsInstance(criterion, ProjectOfItemCriterion)
+        self.assertIsInstance(criterion.criterion, TrueCriterion)
+        self.assertEquals(criterion.todoist_repository, self.todoist_repository_mock)
+
+
+
+        # @data([{'labels_of_item': 'Test'}, LabelsOfItemCriterion, {'project_name': 'Test'}],
+        #       [{'project_of_item': '*'}, ProjectOfItemCriterion, {'name_prefix': '*'}])
+        # @unpack
+        # def test_criterion_requires_todoist_injected_correctly(self, definition, klass, state):
+        #     pass

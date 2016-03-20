@@ -17,13 +17,13 @@ class ItemHasDueDateCriterion:
 
 
 class ProjectOfItemCriterion:
-    def __init__(self, todoist, criterion):
-        self.todoist = todoist
+    def __init__(self, todoist_repository, criterion):
+        self.todoist_repository = todoist_repository
         self.criterion = criterion
 
     @log('`{item[text]}` resolving project to check `{criterion.criterion.__class__.__name__}`')
     def applies_to(self, item):
-        project_of_item = self.todoist.get_project_by_id(item['project_id'])
+        project_of_item = self.todoist_repository.get_project_by_id(item['project_id'])
         if not project_of_item:
             return False
 
