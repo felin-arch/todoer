@@ -18,12 +18,12 @@ class ItemHasDueDateCriterion:
 
 class ProjectOfItemCriterion:
     def __init__(self, todoist, criterion):
-        self._todoist = todoist
+        self.todoist = todoist
         self.criterion = criterion
 
     @log('`{item[text]}` resolving project to check `{criterion.criterion.__class__.__name__}`')
     def applies_to(self, item):
-        project_of_item = self._todoist.get_project_by_id(item['project_id'])
+        project_of_item = self.todoist.get_project_by_id(item['project_id'])
         if not project_of_item:
             return False
 
@@ -31,13 +31,13 @@ class ProjectOfItemCriterion:
 
 
 class ItemIsNthInProjectCriterion:
-    def __init__(self, todoist, n):
-        self._todoist = todoist
+    def __init__(self, todoist_repository, n):
+        self.todoist_repository = todoist_repository
         self.n = n
 
     @log('`{item[text]}` is #{criterion.n} in project?')
     def applies_to(self, item):
-        items_of_project = self._todoist.get_items_by_project(item['project_id'])
+        items_of_project = self.todoist_repository.get_items_by_project(item['project_id'])
         item_orders = list([item['item_order'] for item in items_of_project])
 
         index = self.n - 1
@@ -48,12 +48,12 @@ class ItemIsNthInProjectCriterion:
 
 
 class LabelsOfItemCriterion:
-    def __init__(self, todoist, criterion):
-        self._todoist = todoist
+    def __init__(self, todoist_repository, criterion):
+        self.todoist_repository = todoist_repository
         self.criterion = criterion
 
     @log('`{item[text]}` resolving labels to check `{criterion.criterion.__class__.__name__}`')
     def applies_to(self, item):
-        labels = [self._todoist.get_label_by_id(label_id) for label_id in item['labels']]
+        labels = [self.todoist_repository.get_label_by_id(label_id) for label_id in item['labels']]
         labels_of_item = [label for label in labels if label is not None]
         return self.criterion.applies_to(labels_of_item)

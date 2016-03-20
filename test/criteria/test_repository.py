@@ -23,7 +23,7 @@ class TestCriteriaRepository(TestCase):
     def test_criterion_name_collision_throws_error(self):
         repository = CriteriaRepository([simple, simple])
         with self.assertRaises(CriterionDefinitionCollisionError) as ctx:
-            repository.load_criteria()
+            repository.initialize()
 
         self.assertEquals(str(ctx.exception), '')
 
@@ -38,14 +38,14 @@ class TestCriteriaRepository(TestCase):
             self, modules, criterion_name, expected_definition
     ):
         repository = CriteriaRepository(modules)
-        repository.load_criteria()
+        repository.initialize()
 
         criterion_definition = repository.get_criterion_definition(criterion_name)
         self.assertEquals(criterion_definition, expected_definition)
 
     def test_multiple_module_criteria_correctly_register_in_repository(self):
         repository = CriteriaRepository([simple, todoist_repository])
-        repository.load_criteria()
+        repository.initialize()
 
         criterion_definition = repository.get_criterion_definition('test_simple')
         self.assertEquals(criterion_definition, {'class': TestSimpleCriterion, 'inject_todoist': False})

@@ -1,34 +1,32 @@
 import unittest
+from unittest.mock import MagicMock
 
-from app.criteria.repository import NoSuchCriterionDefinitionError
-from ddt import ddt, data, unpack
+from app.criteria.repository import NoSuchCriterionDefinitionError, CriteriaRepository
 from app.criteria.factory import CriterionFactory, InvalidCriterionDescriptorError
-from app.criteria.logical import *
-from app.criteria.item import *
-from app.criteria.project import *
-from app.criteria.label import *
+from app.criteria.logical import AllCriterion, NotCriterion, TrueCriterion, FalseCriterion
+from app.criteria.project import ProjectNameEqualsCriterion
+from app.criteria.item import ProjectOfItemCriterion
 import app.criteria.logical
 import app.criteria.item
 import app.criteria.project
 import app.criteria.label
 
-@ddt
+
 class TestCriterionFactory(unittest.TestCase):
     def setUp(self):
-        self.criterion_factory = CriterionFactory([
+        self.todoist_repository_mock = MagicMock()
+        criteria_repository = CriteriaRepository([
             app.criteria.logical,
             app.criteria.item,
             app.criteria.project,
             app.criteria.label
         ])
+        criteria_repository.initialize()
+        self.criterion_factory = CriterionFactory(criteria_repository, self.todoist_repository_mock)
 
-    @data([{'true': ''}, TrueCriterion],
-          [{'false': ''}, FalseCriterion],
-          [{'item_has_due_date': ''}, ItemHasDueDateCriterion])
-    @unpack
-    def test_given_simple_definition_constructs_criterion(self, definition, klass):
-        criterion = self.criterion_factory.create(definition)
-        self.assertIsInstance(criterion, klass)
+    def test_given_simple_definition_constructs_criterion(self):
+        criterion = self.criterion_factory.create({'true': ''})
+        self.assertIsInstance(criterion, TrueCriterion)
 
     def test_given_definition_with_multiple_keys_raises_error(self):
         with self.assertRaises(InvalidCriterionDescriptorError) as ctx:
@@ -42,11 +40,20 @@ class TestCriterionFactory(unittest.TestCase):
 
         self.assertEquals(str(ctx.exception), 'No such criterion definition: non-existent')
 
-    @data([{'project_name_equals': 'Test'}, ProjectNameEqualsCriterion, {'project_name': 'Test'}],
-          [{'project_name_starts_with': '*'}, ProjectNameStartsWithCriterion, {'name_prefix': '*'}],
-          [{'label_name_equals': 'nice_label'}, LabelNameEqualsCriterion, {'label_name': 'nice_label'}])
-    @unpack
-    def test_given_arguments_constructs_criterion(self, definition, klass, state):
+    def test_given_arguments_constructs_criterion(self):
+        criterion = self.criterion_factory.create({'project_name_equals': 'Test'})
+        self.assertIsInstance(criterion, ProjectNameEqualsCriterion)
+        self.assertEquals(criterion.__dict__, {'project_name': 'Test'})
+
+    def test_given_single_inner_criterion_constructs_correctly(self):
+        definition = {'not': {'true': ''}}
         criterion = self.criterion_factory.create(definition)
-        self.assertIsInstance(criterion, klass)
-        self.assertEquals(criterion.__dict__, state)
+        self.assertIsInstance(criterion, NotCriterion)
+        self.assertIsInstance(criterion.criterion, TrueCriterion)
+
+    def test_given_multiple_inner_criteria_constructs_correctly(self):
+        definition = {'all': [{'true': ''}, {'false': ''}]}
+        criterion = self.criterion_factory.create(definition)
+        self.assertIsInstance(criterion, AllCriterion)
+        self.assertIsInstance(criterion.criteria[0], TrueCriterion)
+        self.assertIsInstance(criterion.criteria[1], FalseCriterion)

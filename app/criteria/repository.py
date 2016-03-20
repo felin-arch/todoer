@@ -7,7 +7,8 @@ class CriteriaRepository:
         self._criterion_categories = criterion_categories
         self._repository = {}
 
-    def load_criteria(self):
+    def initialize(self):
+        self._repository = {}
         item_criteria = self._discover_criteria()
         for criterion_name, klass in item_criteria:
             self._register_criterion(criterion_name, klass)
@@ -37,7 +38,7 @@ class CriteriaRepository:
     @staticmethod
     def _should_inject_todoist_in_constructor(klass):
         parameters = inspect.signature(klass.__init__).parameters.values()
-        return any([parameter.name == 'todoist' for parameter in parameters])
+        return any([parameter.name == 'todoist_repository' for parameter in parameters])
 
 
 class NoSuchCriterionDefinitionError(RuntimeError):
