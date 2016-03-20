@@ -22,7 +22,8 @@ class CriterionFactory:
     def _prepare_arguments(self, should_inject_todoist, arguments):
         prepared_arguments = [self._todoist_repository] if should_inject_todoist else []
         prepared_arguments.extend(
-            [self._transform_argument(argument) for argument in [arguments] if argument is not '']
+            [self._transform_argument(argument) for argument in [arguments] if
+             argument is not '' and argument is not None]
         )
 
         return prepared_arguments
