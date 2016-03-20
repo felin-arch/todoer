@@ -1,5 +1,6 @@
 import inspect
 from app.criteria.name_converter import CriterionNameConverter
+from app.criteria.definition import CriterionDefinition
 
 
 class CriteriaRepository:
@@ -33,7 +34,7 @@ class CriteriaRepository:
         if criterion_name in self._repository.keys():
             raise CriterionDefinitionCollisionError()
 
-        self._repository[criterion_name] = {'class': klass, 'inject_todoist': should_inject_todoist}
+        self._repository[criterion_name] = CriterionDefinition(klass, should_inject_todoist)
 
     @staticmethod
     def _should_inject_todoist_in_constructor(klass):

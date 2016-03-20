@@ -15,9 +15,9 @@ class CriterionFactory:
 
     def _construct_criterion(self, criterion_type, arguments):
         definition = self._criteria_repository.get_criterion_definition(criterion_type)
-        arguments = self._prepare_arguments(definition['inject_todoist'], arguments)
+        arguments = self._prepare_arguments(definition.should_inject_todoist_repository, arguments)
 
-        return definition['class'](*arguments)
+        return definition.klass(*arguments)
 
     def _prepare_arguments(self, should_inject_todoist, arguments):
         prepared_arguments = [self._todoist_repository] if should_inject_todoist else []

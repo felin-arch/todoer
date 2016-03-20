@@ -9,6 +9,7 @@ from test.mocks.criterion.single_argument import TestSingleArgumentCriterion
 from test.mocks.criterion.todoist_repository import TestRequireTodoistRepositoryCriterion
 from test.mocks.criterion.todoist_repository_and_single_argument import (
     TestRequireTodoistRepositoryAndSingleArgumentCriterion)
+from app.criteria.definition import CriterionDefinition
 
 
 @ddt
@@ -27,12 +28,12 @@ class TestCriteriaRepository(TestCase):
 
         self.assertEquals(str(ctx.exception), '')
 
-    @data([[simple], 'test_simple', {'class': TestSimpleCriterion, 'inject_todoist': False}],
-          [[single_argument], 'test_single_argument', {'class': TestSingleArgumentCriterion, 'inject_todoist': False}],
+    @data([[simple], 'test_simple', CriterionDefinition(TestSimpleCriterion, False)],
+          [[single_argument], 'test_single_argument', CriterionDefinition(TestSingleArgumentCriterion, False)],
           [[todoist_repository], 'test_require_todoist_repository',
-           {'class': TestRequireTodoistRepositoryCriterion, 'inject_todoist': True}],
+           CriterionDefinition(TestRequireTodoistRepositoryCriterion, True)],
           [[todoist_repository_and_single_argument], 'test_require_todoist_repository_and_single_argument',
-           {'class': TestRequireTodoistRepositoryAndSingleArgumentCriterion, 'inject_todoist': True}])
+           CriterionDefinition(TestRequireTodoistRepositoryAndSingleArgumentCriterion, True)])
     @unpack
     def test_module_criteria_correctly_register_in_repository(
             self, modules, criterion_name, expected_definition
@@ -48,8 +49,8 @@ class TestCriteriaRepository(TestCase):
         repository.initialize()
 
         criterion_definition = repository.get_criterion_definition('test_simple')
-        self.assertEquals(criterion_definition, {'class': TestSimpleCriterion, 'inject_todoist': False})
+        self.assertEquals(criterion_definition, CriterionDefinition(TestSimpleCriterion, False))
 
         criterion_definition = repository.get_criterion_definition('test_require_todoist_repository')
         self.assertEquals(criterion_definition,
-                          {'class': TestRequireTodoistRepositoryCriterion, 'inject_todoist': True})
+                          CriterionDefinition(TestRequireTodoistRepositoryCriterion, True))
