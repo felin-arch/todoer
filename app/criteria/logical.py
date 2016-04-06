@@ -19,9 +19,7 @@ class AllCriterion:
 
     @log('`{item[text]}` matches all criteria?')
     def applies_to(self, item):
-        return all(
-            [criterion.applies_to(item) for criterion in self.criteria]
-        )
+        return all([criterion.applies_to(item) for criterion in self.criteria])
 
 
 class AnyCriterion:
@@ -30,9 +28,7 @@ class AnyCriterion:
 
     @log('`{item[text]}` matches any criteria?')
     def applies_to(self, item):
-        return any(
-            [criterion.applies_to(item) for criterion in self.criteria]
-        )
+        return any([criterion.applies_to(item) for criterion in self.criteria])
 
 
 class NotCriterion:
@@ -50,6 +46,4 @@ class AnyOfCriterion:
 
     @log('Any of the {item[count]} items match?')
     def applies_to(self, items):
-        return any(
-            [self.criterion.applies_to(item) for item in items]
-        )
+        return any([self.criterion.applies_to(item) for item in items])

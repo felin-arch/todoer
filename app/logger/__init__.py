@@ -1,10 +1,10 @@
 from functools import wraps
+
 from .criteria import CriteriaLogger
 
+
 def log(log_format):
-
     def log_decorator(original_method):
-
         @wraps(original_method)
         def method_wrapper(*args, **kwargs):
             logger = CriteriaLogger(log_format, args[0].__class__.__name__)

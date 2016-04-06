@@ -1,6 +1,7 @@
 import logging
 
-class CriteriaLogger():
+
+class CriteriaLogger:
     indent = 0
 
     def __init__(self, log_format, logger):
@@ -25,16 +26,18 @@ class CriteriaLogger():
 
     def _get_item(self, argument):
         if isinstance(argument, list):
-            return { 'count': len(argument) }
+            return {'count': len(argument)}
 
         item = argument.data.copy()
         item['text'] = self._get_item_identifier(item)
         return item
 
-    def _get_item_identifier(self, item):
+    @staticmethod
+    def _get_item_identifier(item):
         for label in ['content', 'name']:
             if label in item:
                 return item[label]
 
-    def _get_prefix(self):
+    @staticmethod
+    def _get_prefix():
         return '| ' * CriteriaLogger.indent
