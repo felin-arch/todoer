@@ -5,4 +5,5 @@ test:
   override:
     - nose2 --plugin nose2.plugins.junitxml --junit-xml
   post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/nose2/
     - mv nose2-junit.xml $CIRCLE_TEST_REPORTS/nose2/junit.xml
