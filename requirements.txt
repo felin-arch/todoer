@@ -1,0 +1,4 @@
+ddt==1.0.1
+nose2==0.6.3
+ruamel.yaml==0.11.7
+todoist-python==0.2.23
