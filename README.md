@@ -1,3 +1,3 @@
-= todoist-na-plugin
+= todoer [![Circle CI](https://circleci.com/gh/felin-arch/todoer.svg?style=svg)](https://circleci.com/gh/felin-arch/todoer)
 
-A plugin used to automatically label next actions in Todoist.
+Make todoist do things automatically based on predefined rules and actions.
