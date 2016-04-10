@@ -22,7 +22,7 @@ class ActionsRepository:
 
         return actions
 
-    def get_action_definition(self, action_label):
+    def get_action_definition(self, action_label) -> ActionDefinition:
         if action_label not in self._repository.keys():
             raise NoSuchActionDefinitionError('No such action definition: {0}'.format(action_label))
 
