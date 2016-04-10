@@ -1,6 +1,7 @@
 import inspect
-from app.util import NameConverter
+
 from app.criteria.definition import CriterionDefinition
+from app.util import NameConverter
 
 
 class CriteriaRepository:
@@ -38,8 +39,9 @@ class CriteriaRepository:
 
     @staticmethod
     def _should_inject_todoist_in_constructor(klass):
-        parameters = inspect.signature(klass.__init__).parameters.values()
-        return any([parameter.name == 'todoist_repository' for parameter in parameters])
+        parameters = list(
+            [p.name for p in inspect.signature(klass.__init__).parameters.values() if p.name is not 'self'])
+        return len(parameters) > 0 and parameters[0] is 'todoist_repository'
 
 
 class NoSuchCriterionDefinitionError(RuntimeError):
