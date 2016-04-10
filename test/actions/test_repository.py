@@ -2,11 +2,12 @@ from unittest import TestCase
 
 from ddt import ddt, unpack, data
 
+from app.actions.definition import ActionDefinition
 from app.actions.repository import (ActionsRepository, NoSuchActionDefinitionError,
                                     ActionDefinitionCollisionError)
-from test.mocks.actions import simple, another_simple
-from test.mocks.actions.another_simple import TestAnotherSimpleAction
+from test.mocks.actions import simple, single_argument
 from test.mocks.actions.simple import TestSimpleAction
+from test.mocks.actions.single_argument import TestSingleArgumentAction
 
 
 @ddt
@@ -25,7 +26,7 @@ class TestActionsRepository(TestCase):
 
         self.assertEquals(str(ctx.exception), 'Definition collision: test_simple')
 
-    @data([[simple], 'test_simple', TestSimpleAction])
+    @data([[simple], 'test_simple', ActionDefinition(TestSimpleAction, [])])
     @unpack
     def test_module_actions_correctly_register_in_repository(
             self, modules, criterion_name, expected_definition
@@ -37,11 +38,11 @@ class TestActionsRepository(TestCase):
         self.assertEquals(criterion_definition, expected_definition)
 
     def test_multiple_module_actions_correctly_register_in_repository(self):
-        repository = ActionsRepository([simple, another_simple])
+        repository = ActionsRepository([simple, single_argument])
         repository.initialize()
 
         action_definition = repository.get_action_definition('test_simple')
-        self.assertEquals(action_definition, TestSimpleAction)
+        self.assertEquals(action_definition, ActionDefinition(TestSimpleAction, []))
 
-        action_definition = repository.get_action_definition('test_another_simple')
-        self.assertEquals(action_definition, TestAnotherSimpleAction)
+        action_definition = repository.get_action_definition('test_single_argument')
+        self.assertEquals(action_definition, ActionDefinition(TestSingleArgumentAction, ['label']))

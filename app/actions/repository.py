@@ -1,5 +1,6 @@
 import inspect
 
+from app.actions.definition import ActionDefinition
 from app.util import NameConverter
 
 
@@ -33,7 +34,11 @@ class ActionsRepository:
         if action_name in self._repository.keys():
             raise ActionDefinitionCollisionError('Definition collision: {0}'.format(action_name))
 
-        self._repository[action_name] = klass
+        self._repository[action_name] = ActionDefinition(klass, self._get_parameters(klass))
+
+    @staticmethod
+    def _get_parameters(klass):
+        return list([p.name for p in inspect.signature(klass.__init__).parameters.values() if p.name is not 'self'])
 
 
 class NoSuchActionDefinitionError(RuntimeError):
