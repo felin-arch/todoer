@@ -8,7 +8,7 @@ from test.mocks import MockItem, MockLabel, MockProject
 
 class TestItemHasLabelCriterion(unittest.TestCase):
     def test_item_has_label_returns_True(self):
-        l = MockLabel(id=1)
+        l = MockLabel(label_id=1)
         i = MockItem(labels=[1])
 
         ic = ItemHasLabelCriterion(l)
@@ -16,7 +16,7 @@ class TestItemHasLabelCriterion(unittest.TestCase):
         self.assertTrue(ic.applies_to(i))
 
     def test_item_has_other_labels_returns_False(self):
-        l = MockLabel(id=1)
+        l = MockLabel(label_id=1)
         i = MockItem(labels=[2, 3, 4])
 
         ic = ItemHasLabelCriterion(l)
@@ -100,7 +100,7 @@ class TestItemIsNthInProjectCriterion(unittest.TestCase):
 class TestLabelsOfItemCriterion(unittest.TestCase):
     def setUp(self):
         self.todoist = MagicMock()
-        self.mockLabels = [MockLabel(id=1), MockLabel(id=2)]
+        self.mockLabels = [MockLabel(label_id=1), MockLabel(label_id=2)]
         self.mockCriteria = MagicMock()
         self.mockCriteria.applies_to.return_value = True
 

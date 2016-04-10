@@ -1,9 +1,6 @@
-import unittest
-
-class MockItem():
-
-    def __init__(self, content='Item', labels=[],
-      due_date=None, project_id=None, item_order=0):
+class MockItem:
+    def __init__(self, content='Item', labels=None, due_date=None, project_id=None, item_order=0):
+        labels = [] if labels is None else labels
         self.data = {
             'content': content,
             'labels': labels,
@@ -16,8 +13,7 @@ class MockItem():
         return self.data[key]
 
 
-class MockProject():
-
+class MockProject:
     def __init__(self, name='Project'):
         self.data = {'name': name}
 
@@ -25,10 +21,9 @@ class MockProject():
         return self.data[key]
 
 
-class MockLabel():
-
-    def __init__(self, id=1, name='Label'):
-        self.data = {'name': name, 'id': id}
+class MockLabel:
+    def __init__(self, label_id=1, name='Label'):
+        self.data = {'name': name, 'id': label_id}
 
     def __getitem__(self, key):
         return self.data[key]
