@@ -1,15 +1,6 @@
 from app.logger import log
 
 
-class ItemHasLabelCriterion:
-    def __init__(self, label):
-        self.label = label
-
-    @log('`{item[text]}` has `{criterion.label[name]}` label?')
-    def applies_to(self, item):
-        return self.label['id'] in item['labels']
-
-
 class ItemHasDueDateCriterion:
     @log('`{item[text]}` has due date?')
     def applies_to(self, item):

@@ -6,24 +6,6 @@ from app.criteria.logical import FalseCriterion, TrueCriterion
 from test.mocks import MockItem, MockLabel, MockProject
 
 
-class TestItemHasLabelCriterion(unittest.TestCase):
-    def test_item_has_label_returns_True(self):
-        l = MockLabel(label_id=1)
-        i = MockItem(labels=[1])
-
-        ic = ItemHasLabelCriterion(l)
-
-        self.assertTrue(ic.applies_to(i))
-
-    def test_item_has_other_labels_returns_False(self):
-        l = MockLabel(label_id=1)
-        i = MockItem(labels=[2, 3, 4])
-
-        ic = ItemHasLabelCriterion(l)
-
-        self.assertFalse(ic.applies_to(i))
-
-
 class TestItemHasDueDate(unittest.TestCase):
     def test_item_has_no_due_date_returns_False(self):
         i = MockItem()
