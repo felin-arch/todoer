@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "rules schema",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/rule"
+      }
+    }
+  },
+  "required": [
+    "rules"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "item"
+          ]
+        },
+        "criterion": {
+          "$ref": "#/definitions/ItemCriterion"
+        },
+        "action": {
+          "$ref": "#/definitions/Action"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "criterion",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "ItemCriterion": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ItemHasDueDate"
+        },
+        {
+          "$ref": "#/definitions/ItemIsNthInProject"
+        },
+        {
+          "$ref": "#/definitions/LabelsOfItem"
+        },
+        {
+          "$ref": "#/definitions/ProjectOfItem"
+        },
+        {
+          "$ref": "#/definitions/ItemAny"
+        },
+        {
+          "$ref": "#/definitions/ItemAll"
+        },
+        {
+          "$ref": "#/definitions/ItemNot"
+        }
+      ]
+    },
+    "ItemHasDueDate": {
+      "type": "object",
+      "properties": {
+        "item_has_due_date": {
+          "enum": [
+            ""
+          ]
+        }
+      },
+      "required": [
+        "item_has_due_date"
+      ],
+      "additionalProperties": false
+    },
+    "ItemIsNthInProject": {
+      "type": "object",
+      "properties": {
+        "item_is_nth_in_project": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "item_is_nth_in_project"
+      ],
+      "additionalProperties": false
+    },
+    "LabelsOfItem": {
+      "type": "object",
+      "properties": {
+        "labels_of_item": {
+          "$ref": "#/definitions/LabelAnyOf"
+        }
+      },
+      "required": [
+        "labels_of_item"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectOfItem": {
+      "type": "object",
+      "properties": {
+        "project_of_item": {
+          "$ref": "#/definitions/ProjectCriterion"
+        }
+      },
+      "required": [
+        "project_of_item"
+      ],
+      "additionalProperties": false
+    },
+    "ItemAny": {
+      "type": "object",
+      "properties": {
+        "item_any": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemCriterion"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "item_any"
+      ],
+      "additionalProperties": false
+    },
+    "ItemAll": {
+      "type": "object",
+      "properties": {
+        "item_all": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemCriterion"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "item_all"
+      ],
+      "additionalProperties": false
+    },
+    "ItemNot": {
+      "type": "object",
+      "properties": {
+        "item_not": {
+          "$ref": "#/definitions/ItemCriterion"
+        }
+      },
+      "required": [
+        "item_not"
+      ],
+      "additionalProperties": false
+    },
+    "LabelCriterion": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/LabelAny"
+        },
+        {
+          "$ref": "#/definitions/LabelNameEquals"
+        }
+      ]
+    },
+    "LabelNameEquals": {
+      "type": "object",
+      "properties": {
+        "label_name_equals": {
+          "type": "string",
+          "pattern": "^.+$"
+        }
+      },
+      "required": [
+        "label_name_equals"
+      ],
+      "additionalProperties": false
+    },
+    "LabelAny": {
+      "type": "object",
+      "properties": {
+        "label_any": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LabelCriterion"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "label_any"
+      ],
+      "additionalProperties": false
+    },
+    "LabelAnyOf": {
+      "type": "object",
+      "properties": {
+        "label_any_of": {
+          "$ref": "#/definitions/LabelCriterion"
+        }
+      },
+      "required": [
+        "label_any_of"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectCriterion": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ProjectNameEquals"
+        },
+        {
+          "$ref": "#/definitions/ProjectNameStartsWith"
+        },
+        {
+          "$ref": "#/definitions/ProjectAny"
+        },
+        {
+          "$ref": "#/definitions/ProjectNot"
+        }
+      ]
+    },
+    "ProjectNameEquals": {
+      "type": "object",
+      "properties": {
+        "project_name_equals": {
+          "type": "string",
+          "pattern": "^.+$"
+        }
+      },
+      "required": [
+        "project_name_equals"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectNameStartsWith": {
+      "type": "object",
+      "properties": {
+        "project_name_starts_with": {
+          "type": "string",
+          "pattern": "^.+$"
+        }
+      },
+      "required": [
+        "project_name_starts_with"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectAny": {
+      "type": "object",
+      "properties": {
+        "project_any": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectCriterion"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "project_any"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectNot": {
+      "type": "object",
+      "properties": {
+        "project_not": {
+          "$ref": "#/definitions/ProjectCriterion"
+        }
+      },
+      "required": [
+        "project_not"
+      ],
+      "additionalProperties": false
+    },
+    "Action": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AddLabel"
+        }
+      ]
+    },
+    "AddLabel": {
+      "type": "object",
+      "properties": {
+        "add_label": {
+          "type": "string",
+          "pattern": "^.+$"
+        }
+      }
+    }
+  }
+}
