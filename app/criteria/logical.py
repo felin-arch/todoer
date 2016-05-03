@@ -1,19 +1,20 @@
+from app.criteria import Criterion
 from app.logger import log
 
 
-class TrueCriterion:
+class TrueCriterion(Criterion):
     @log('True for `{item[text]}`')
     def applies_to(self, item):
         return True
 
 
-class FalseCriterion:
+class FalseCriterion(Criterion):
     @log('False for `{item[text]}`')
     def applies_to(self, item):
         return False
 
 
-class AllCriterion:
+class AllCriterion(Criterion):
     def __init__(self, criteria):
         self.criteria = criteria
 
@@ -22,7 +23,7 @@ class AllCriterion:
         return all([criterion.applies_to(item) for criterion in self.criteria])
 
 
-class AnyCriterion:
+class AnyCriterion(Criterion):
     def __init__(self, criteria):
         self.criteria = criteria
 
@@ -31,7 +32,7 @@ class AnyCriterion:
         return any([criterion.applies_to(item) for criterion in self.criteria])
 
 
-class NotCriterion:
+class NotCriterion(Criterion):
     def __init__(self, criterion):
         self.criterion = criterion
 
@@ -40,7 +41,7 @@ class NotCriterion:
         return not self.criterion.applies_to(item)
 
 
-class AnyOfCriterion:
+class AnyOfCriterion(Criterion):
     def __init__(self, criterion):
         self.criterion = criterion
 

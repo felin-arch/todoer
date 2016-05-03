@@ -1,5 +1,6 @@
 import inspect
 
+from app.criteria import Criterion
 from app.criteria.definition import CriterionDefinition
 from app.util import NameConverter
 
@@ -12,8 +13,15 @@ class CriteriaRepository:
     def initialize(self):
         self._repository = {}
         item_criteria = self._discover_criteria()
-        for criterion_name, klass in item_criteria:
-            self._register_criterion(criterion_name, klass)
+        for criterion_name, class_ in item_criteria:
+            if self._should_register_criterion(class_):
+                self._register_criterion(criterion_name, class_)
+
+    def get_criterion_definition(self, criterion_label) -> CriterionDefinition:
+        if criterion_label not in self._repository.keys():
+            raise NoSuchCriterionDefinitionError('No such criterion definition: {0}'.format(criterion_label))
+
+        return self._repository[criterion_label]
 
     def _discover_criteria(self):
         criteria = []
@@ -22,25 +30,23 @@ class CriteriaRepository:
 
         return criteria
 
-    def get_criterion_definition(self, criterion_label):
-        if criterion_label not in self._repository.keys():
-            raise NoSuchCriterionDefinitionError('No such criterion definition: {0}'.format(criterion_label))
+    @staticmethod
+    def _should_register_criterion(class_):
+        return issubclass(class_, Criterion) and class_ is not Criterion
 
-        return self._repository[criterion_label]
-
-    def _register_criterion(self, criterion_name, klass):
-        should_inject_todoist = self._should_inject_todoist_in_constructor(klass)
+    def _register_criterion(self, criterion_name, class_):
+        should_inject_todoist = self._should_inject_todoist_in_constructor(class_)
         criterion_name = NameConverter.convert_criterion_name(criterion_name)
 
         if criterion_name in self._repository.keys():
             raise CriterionDefinitionCollisionError()
 
-        self._repository[criterion_name] = CriterionDefinition(klass, should_inject_todoist)
+        self._repository[criterion_name] = CriterionDefinition(class_, should_inject_todoist)
 
     @staticmethod
-    def _should_inject_todoist_in_constructor(klass):
+    def _should_inject_todoist_in_constructor(class_):
         parameters = list(
-            [p.name for p in inspect.signature(klass.__init__).parameters.values() if p.name is not 'self'])
+            [p.name for p in inspect.signature(class_.__init__).parameters.values() if p.name is not 'self'])
         return len(parameters) > 0 and parameters[0] is 'todoist_repository'
 
 

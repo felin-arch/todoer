@@ -1,7 +1,8 @@
+from app.criteria import Criterion
 from app.logger import log
 
 
-class LabelNameEqualsCriterion:
+class LabelNameEqualsCriterion(Criterion):
     def __init__(self, label_name):
         self.label_name = label_name
 

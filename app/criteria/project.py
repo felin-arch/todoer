@@ -1,7 +1,8 @@
+from app.criteria import Criterion
 from app.logger import log
 
 
-class ProjectNameEqualsCriterion:
+class ProjectNameEqualsCriterion(Criterion):
     def __init__(self, project_name):
         self.project_name = project_name
 
@@ -10,7 +11,7 @@ class ProjectNameEqualsCriterion:
         return item['name'] == self.project_name
 
 
-class ProjectNameStartsWithCriterion:
+class ProjectNameStartsWithCriterion(Criterion):
     def __init__(self, name_prefix):
         self.name_prefix = name_prefix
 

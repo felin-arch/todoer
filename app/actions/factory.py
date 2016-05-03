@@ -39,7 +39,7 @@ class ActionFactory:
         definition = self._actions_repository.get_action_definition(criterion_type)
         arguments = self._construct_arguments(definition, argument_descriptors)
 
-        return definition.klass(*arguments)
+        return definition.class_(*arguments)
 
     def _construct_arguments(self, definition, argument_descriptors):
         raw_arguments = [argument_descriptors]

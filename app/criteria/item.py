@@ -1,13 +1,14 @@
+from app.criteria import Criterion
 from app.logger import log
 
 
-class ItemHasDueDateCriterion:
+class ItemHasDueDateCriterion(Criterion):
     @log('`{item[text]}` has due date?')
     def applies_to(self, item):
         return item['due_date'] is not None
 
 
-class ProjectOfItemCriterion:
+class ProjectOfItemCriterion(Criterion):
     def __init__(self, todoist_repository, criterion):
         self.todoist_repository = todoist_repository
         self.criterion = criterion
@@ -21,7 +22,7 @@ class ProjectOfItemCriterion:
         return self.criterion.applies_to(project_of_item)
 
 
-class ItemIsNthInProjectCriterion:
+class ItemIsNthInProjectCriterion(Criterion):
     def __init__(self, todoist_repository, n):
         self.todoist_repository = todoist_repository
         self.n = n
@@ -38,7 +39,7 @@ class ItemIsNthInProjectCriterion:
         return item_orders[index] == item['item_order']
 
 
-class LabelsOfItemCriterion:
+class LabelsOfItemCriterion(Criterion):
     def __init__(self, todoist_repository, criterion):
         self.todoist_repository = todoist_repository
         self.criterion = criterion

@@ -36,7 +36,7 @@ class CriterionFactory:
         definition = self._criteria_repository.get_criterion_definition(criterion_type)
         arguments = self._construct_arguments(definition, argument_descriptors)
 
-        return definition.klass(*arguments)
+        return definition.class_(*arguments)
 
     def _construct_arguments(self, definition, argument_descriptors):
         arguments = [self._todoist_repository] if definition.should_inject_todoist_repository else []
