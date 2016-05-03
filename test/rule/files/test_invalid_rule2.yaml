@@ -1,0 +1,25 @@
+rules:
+  - name: Test item rule
+    type: item
+    criterion:
+      item_all:
+        - non_existing_item_criteria: ''
+        - item_not:
+            item_any:
+              - item_has_due_date: ''
+              - labels_of_item:
+                  label_any_of:
+                    label_any:
+                      - label_name_equals: waiting_for
+                      - label_name_equals: next_action
+        - project_of_item:
+            project_not:
+              project_any:
+                - project_name_equals: Inbox
+                - project_name_starts_with: '*'
+        - item_any:
+            - project_of_item:
+                project_name_starts_with: '|'
+            - item_is_nth_in_project: 1
+    action:
+      add_label: next_action

@@ -1,0 +1,198 @@
+$schema: http://json-schema.org/draft-04/schema#
+title: rules schema
+required:
+  - rules
+type: object
+properties:
+  rules:
+    type: array
+    items:
+      $ref: '#/definitions/Rule'
+additionalProperties: false
+definitions:
+  Rule:
+    type: object
+    properties:
+      type:
+        enum:
+          - item
+      action:
+        $ref: '#/definitions/Actions/Action'
+      criterion:
+        $ref: '#/definitions/ItemCriteria/ItemCriterion'
+      name:
+        type: string
+    additionalProperties: false
+    required:
+      - name
+      - type
+      - criterion
+      - action
+  Actions:
+    Action:
+      type: object
+      oneOf:
+        - $ref: '#/definitions/Actions/AddLabel'
+    AddLabel:
+      type: object
+      properties:
+        add_label:
+          type: string
+          pattern: ^.+$
+      additionalProperties: false
+      required:
+        - add_label
+  ItemCriteria:
+    ItemCriterion:
+      type: object
+      oneOf:
+        - $ref: '#/definitions/ItemCriteria/ItemHasDueDate'
+        - $ref: '#/definitions/ItemCriteria/ItemIsNthInProject'
+        - $ref: '#/definitions/ItemCriteria/LabelsOfItem'
+        - $ref: '#/definitions/ItemCriteria/ProjectOfItem'
+        - $ref: '#/definitions/ItemCriteria/ItemAny'
+        - $ref: '#/definitions/ItemCriteria/ItemAll'
+        - $ref: '#/definitions/ItemCriteria/ItemNot'
+    ItemHasDueDate:
+      type: object
+      properties:
+        item_has_due_date:
+          enum:
+            - ''
+      additionalProperties: false
+      required:
+        - item_has_due_date
+    ItemIsNthInProject:
+      type: object
+      properties:
+        item_is_nth_in_project:
+          type: integer
+          minimum: 1
+      additionalProperties: false
+      required:
+        - item_is_nth_in_project
+    LabelsOfItem:
+      type: object
+      properties:
+        labels_of_item:
+          $ref: '#/definitions/LabelCriteria/LabelAnyOf'
+      additionalProperties: false
+      required:
+        - labels_of_item
+    ProjectOfItem:
+      type: object
+      properties:
+        project_of_item:
+          $ref: '#/definitions/ProjectCriteria/ProjectCriterion'
+      additionalProperties: false
+      required:
+        - project_of_item
+    ItemAny:
+      type: object
+      properties:
+        item_any:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/definitions/ItemCriteria/ItemCriterion'
+      additionalProperties: false
+      required:
+        - item_any
+    ItemAll:
+      type: object
+      properties:
+        item_all:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/definitions/ItemCriteria/ItemCriterion'
+      additionalProperties: false
+      required:
+        - item_all
+    ItemNot:
+      type: object
+      properties:
+        item_not:
+          $ref: '#/definitions/ItemCriteria/ItemCriterion'
+      additionalProperties: false
+      required:
+        - item_not
+  ProjectCriteria:
+    ProjectCriterion:
+      type: object
+      oneOf:
+        - $ref: '#/definitions/ProjectCriteria/ProjectNameEquals'
+        - $ref: '#/definitions/ProjectCriteria/ProjectNameStartsWith'
+        - $ref: '#/definitions/ProjectCriteria/ProjectAny'
+        - $ref: '#/definitions/ProjectCriteria/ProjectNot'
+    ProjectNameEquals:
+      type: object
+      properties:
+        project_name_equals:
+          type: string
+          pattern: ^.+$
+      additionalProperties: false
+      required:
+        - project_name_equals
+    ProjectNameStartsWith:
+      type: object
+      properties:
+        project_name_starts_with:
+          type: string
+          pattern: ^.+$
+      additionalProperties: false
+      required:
+        - project_name_starts_with
+    ProjectAny:
+      type: object
+      properties:
+        project_any:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/definitions/ProjectCriteria/ProjectCriterion'
+      additionalProperties: false
+      required:
+        - project_any
+    ProjectNot:
+      type: object
+      properties:
+        project_not:
+          $ref: '#/definitions/ProjectCriteria/ProjectCriterion'
+      additionalProperties: false
+      required:
+        - project_not
+  LabelCriteria:
+    LabelCriterion:
+      type: object
+      oneOf:
+        - $ref: '#/definitions/LabelCriteria/LabelNameEquals'
+        - $ref: '#/definitions/LabelCriteria/LabelAny'
+    LabelNameEquals:
+      type: object
+      properties:
+        label_name_equals:
+          type: string
+          pattern: ^.+$
+      additionalProperties: false
+      required:
+        - label_name_equals
+    LabelAny:
+      type: object
+      properties:
+        label_any:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/definitions/LabelCriteria/LabelCriterion'
+      additionalProperties: false
+      required:
+        - label_any
+    LabelAnyOf:
+      type: object
+      properties:
+        label_any_of:
+          $ref: '#/definitions/LabelCriteria/LabelCriterion'
+      additionalProperties: false
+      required:
+        - label_any_of
