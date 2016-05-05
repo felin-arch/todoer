@@ -36,12 +36,12 @@ definitions:
     AddLabel:
       type: object
       properties:
-        add_label:
+        add_label_to_item:
           type: string
           pattern: ^.+$
       additionalProperties: false
       required:
-        - add_label
+        - add_label_to_item
   ItemCriteria:
     ItemCriterion:
       type: object

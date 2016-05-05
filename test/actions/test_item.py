@@ -1,6 +1,6 @@
 import unittest
 
-from app.actions.label import AddLabelAction
+from app.actions.item import AddLabelToItemAction
 from test.mocks import MockItem, MockLabel
 
 
@@ -9,7 +9,7 @@ class TestAddLabelAction(unittest.TestCase):
         item = MockItem()
         label = MockLabel()
 
-        action = AddLabelAction(label)
+        action = AddLabelToItemAction(label)
         action.apply_to(item)
 
         self.assertIn(label['id'], item['labels'])
@@ -18,7 +18,7 @@ class TestAddLabelAction(unittest.TestCase):
         label = MockLabel()
         item = MockItem(labels=[label['id']])
 
-        action = AddLabelAction(label)
+        action = AddLabelToItemAction(label)
         action.apply_to(item)
 
         self.assertIn(label['id'], item['labels'])

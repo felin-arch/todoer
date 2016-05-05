@@ -15,6 +15,12 @@ class TestRuleValidator(unittest.TestCase):
         self.assertTrue(result['is_valid'])
         self.assertTrue(len(result['errors']) is 0)
 
+    def test_complex_schema_complex_rule(self):
+        validator = RuleValidator(load_file('files/test_schema1.yaml'))
+        result = validator.validate_rule(load_file('files/test_rule1.yaml'))
+        self.assertTrue(result['is_valid'])
+        self.assertTrue(len(result['errors']) is 0)
+
     @data(['test_invalid_rule1.yaml'],
           ['test_invalid_rule2.yaml'])
     @unpack

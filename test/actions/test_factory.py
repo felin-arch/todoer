@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
 
-import app.actions.label
+import app.actions.item
 from app.actions.factory import ActionFactory, InvalidActionDescriptorError, ActionConstructionError
-from app.actions.label import AddLabelAction
+from app.actions.item import AddLabelToItemAction
 from app.actions.repository import ActionsRepository, NoSuchActionDefinitionError
 
 
@@ -11,7 +11,7 @@ class TestActionFactory(unittest.TestCase):
     def setUp(self):
         self.todoist_repository_mock = MagicMock()
         criteria_repository = ActionsRepository([
-            app.actions.label
+            app.actions.item
         ])
         criteria_repository.initialize()
         self.criterion_factory = ActionFactory(criteria_repository, self.todoist_repository_mock)
@@ -31,9 +31,9 @@ class TestActionFactory(unittest.TestCase):
     def test_given_arguments_needing_lookup_constructs_criterion(self):
         self.todoist_repository_mock.get_label_by_name.return_value = 'TestLabel'
 
-        action = self.criterion_factory.create({'add_label': 'Test'})
+        action = self.criterion_factory.create({'add_label_to_item': 'Test'})
 
-        self.assertIsInstance(action, AddLabelAction)
+        self.assertIsInstance(action, AddLabelToItemAction)
         self.assertEquals(action.__dict__, {'label': 'TestLabel'})
         self.todoist_repository_mock.get_label_by_name.assert_called_with('Test')
 
@@ -41,6 +41,6 @@ class TestActionFactory(unittest.TestCase):
         self.todoist_repository_mock.get_label_by_name.return_value = None
 
         with self.assertRaises(ActionConstructionError) as ctx:
-            self.criterion_factory.create({'add_label': 'Test'})
+            self.criterion_factory.create({'add_label_to_item': 'Test'})
 
         self.assertEquals(str(ctx.exception), 'Could not resolve necessary label: Test')
