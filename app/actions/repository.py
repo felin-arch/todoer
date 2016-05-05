@@ -1,5 +1,6 @@
 import inspect
 
+from app.actions import Action
 from app.actions.definition import ActionDefinition
 from app.util import NameConverter
 
@@ -13,7 +14,8 @@ class ActionsRepository:
         self._repository = {}
         actions = self._discover_actions()
         for action_name, class_ in actions:
-            self._register_action(action_name, class_)
+            if self._should_register_action(class_):
+                self._register_action(action_name, class_)
 
     def _discover_actions(self):
         actions = []
@@ -27,6 +29,10 @@ class ActionsRepository:
             raise NoSuchActionDefinitionError('No such action definition: {0}'.format(action_label))
 
         return self._repository[action_label]
+
+    @staticmethod
+    def _should_register_action(class_):
+        return issubclass(class_, Action) and class_ is not Action
 
     def _register_action(self, action_name, class_):
         action_name = NameConverter.convert_action_name(action_name)

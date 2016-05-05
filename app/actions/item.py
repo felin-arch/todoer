@@ -1,4 +1,7 @@
-class AddLabelToItemAction:
+from app.actions import Action
+
+
+class AddLabelToItemAction(Action):
     def __init__(self, label):
         self.label = label
 
