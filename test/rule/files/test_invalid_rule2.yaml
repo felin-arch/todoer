@@ -22,4 +22,4 @@ rules:
                 project_name_starts_with: '|'
             - item_is_nth_in_project: 1
     action:
-      add_label: next_action
+      add_label_to_item: next_action
