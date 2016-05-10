@@ -11,13 +11,13 @@ from app.rule.validator import RuleValidator
 class TestRuleValidator(unittest.TestCase):
     def test_empty_schema_empty_rule(self):
         validator = RuleValidator({})
-        result = validator.validate_rule({})
+        result = validator.validate({})
         self.assertTrue(result['is_valid'])
         self.assertTrue(len(result['errors']) is 0)
 
     def test_complex_schema_complex_rule(self):
         validator = RuleValidator(load_file('files/test_schema1.yaml'))
-        result = validator.validate_rule(load_file('files/test_rule1.yaml'))
+        result = validator.validate(load_file('files/test_rule1.yaml'))
         self.assertTrue(result['is_valid'])
         self.assertTrue(len(result['errors']) is 0)
 
@@ -28,7 +28,7 @@ class TestRuleValidator(unittest.TestCase):
         schema = load_file('files/test_schema1.yaml')
         rule = load_file('files/' + rule_filename)
         validator = RuleValidator(schema)
-        result = validator.validate_rule(rule)
+        result = validator.validate(rule)
         self.assertFalse(result['is_valid'])
 
 
