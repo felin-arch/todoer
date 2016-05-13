@@ -1,11 +1,12 @@
 import inspect
 
-from app.criteria import Criterion
+from app.criteria import Criterion, AggregateCriterion, ModifierCriterion
 from app.criteria.definition import CriterionDefinition
 from app.criteria.logical import AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion
 from app.util import NameConverter
 
-BASE_CRITERIA = [Criterion, AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion]
+BASE_CRITERIA = [Criterion, AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion, ModifierCriterion,
+                 AggregateCriterion]
 
 
 class CriteriaRepository:
