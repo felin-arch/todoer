@@ -11,6 +11,9 @@ class ProjectNameEqualsCriterion(Criterion):
     def applies_to(self, item):
         return item['name'] == self.project_name
 
+    def raw(self):
+        return {super().name(): self.project_name}
+
 
 class ProjectNameStartsWithCriterion(Criterion):
     def __init__(self, name_prefix):
@@ -19,6 +22,9 @@ class ProjectNameStartsWithCriterion(Criterion):
     @log('`{item[text]}` starts with `{criterion.name_prefix}`?')
     def applies_to(self, project):
         return project['name'].startswith(self.name_prefix)
+
+    def raw(self):
+        return {super().name(): self.name_prefix}
 
 
 class ProjectAllCriterion(AllCriterion):

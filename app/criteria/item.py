@@ -1,4 +1,4 @@
-from app.criteria import Criterion
+from app.criteria import Criterion, ModifierCriterion
 from app.criteria.logical import AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion
 from app.logger import log
 
@@ -9,10 +9,10 @@ class ItemHasDueDateCriterion(Criterion):
         return item['due_date'] is not None
 
 
-class ProjectOfItemCriterion(Criterion):
+class ProjectOfItemCriterion(ModifierCriterion):
     def __init__(self, todoist_repository, criterion):
+        super().__init__(criterion)
         self.todoist_repository = todoist_repository
-        self.criterion = criterion
 
     @log('`{item[text]}` resolving project to check `{criterion.criterion.__class__.__name__}`')
     def applies_to(self, item):
@@ -39,11 +39,14 @@ class ItemIsNthInProjectCriterion(Criterion):
 
         return item_orders[index] == item['item_order']
 
+    def raw(self):
+        return {super().name(): self.n}
 
-class LabelsOfItemCriterion(Criterion):
+
+class LabelsOfItemCriterion(ModifierCriterion):
     def __init__(self, todoist_repository, criterion):
+        super().__init__(criterion)
         self.todoist_repository = todoist_repository
-        self.criterion = criterion
 
     @log('`{item[text]}` resolving labels to check `{criterion.criterion.__class__.__name__}`')
     def applies_to(self, item):

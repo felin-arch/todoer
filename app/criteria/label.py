@@ -11,6 +11,9 @@ class LabelNameEqualsCriterion(Criterion):
     def applies_to(self, item):
         return item['name'] == self.label_name
 
+    def raw(self):
+        return {super().name(): self.label_name}
+
 
 class LabelAllCriterion(AllCriterion):
     pass
