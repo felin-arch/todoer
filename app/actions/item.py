@@ -8,3 +8,6 @@ class AddLabelToItemAction(Action):
     def apply_to(self, item):
         if self.label['id'] not in item['labels']:
             item['labels'].append(self.label['id'])
+
+    def raw(self):
+        return {super().name(): self.label['name']}

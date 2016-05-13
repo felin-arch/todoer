@@ -1,5 +1,5 @@
-from app.criteria import Criterion
 from app.actions import Action
+from app.criteria import Criterion
 
 
 class Rule:
@@ -8,3 +8,11 @@ class Rule:
         self.rule_type = rule_type
         self.criterion = criterion
         self.action = action
+
+    def raw(self):
+        return {
+            'name': self.name,
+            'type': self.rule_type,
+            'criterion': self.criterion.raw(),
+            'action': self.action.raw()
+        }
