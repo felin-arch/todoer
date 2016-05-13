@@ -30,7 +30,7 @@ class CriterionFactory:
         if len(criterion_descriptor.keys()) is not 1:
             raise InvalidCriterionDescriptorError('Descriptor should only have a single key')
 
-        return criterion_descriptor.popitem()
+        return iter(criterion_descriptor.items()).__next__()
 
     def _construct_criterion(self, criterion_type, argument_descriptors):
         definition = self._criteria_repository.get_criterion_definition(criterion_type)

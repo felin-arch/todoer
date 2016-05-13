@@ -33,7 +33,7 @@ class ActionFactory:
         if len(action_descriptor.keys()) is not 1:
             raise InvalidActionDescriptorError('Descriptor should only have a single key')
 
-        return action_descriptor.popitem()
+        return iter(action_descriptor.items()).__next__()
 
     def _construct_action(self, criterion_type, argument_descriptors):
         definition = self._actions_repository.get_action_definition(criterion_type)
