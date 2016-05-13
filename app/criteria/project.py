@@ -1,4 +1,5 @@
 from app.criteria import Criterion
+from app.criteria.logical import AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion
 from app.logger import log
 
 
@@ -18,3 +19,19 @@ class ProjectNameStartsWithCriterion(Criterion):
     @log('`{item[text]}` starts with `{criterion.name_prefix}`?')
     def applies_to(self, project):
         return project['name'].startswith(self.name_prefix)
+
+
+class ProjectAllCriterion(AllCriterion):
+    pass
+
+
+class ProjectAnyCriterion(AnyCriterion):
+    pass
+
+
+class ProjectNotCriterion(NotCriterion):
+    pass
+
+
+class ProjectAnyOfCriterion(AnyOfCriterion):
+    pass

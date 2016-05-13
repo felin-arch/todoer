@@ -26,7 +26,7 @@ class TestCriteriaRepository(TestCase):
         with self.assertRaises(CriterionDefinitionCollisionError) as ctx:
             repository.initialize()
 
-        self.assertEquals(str(ctx.exception), '')
+        self.assertEquals(str(ctx.exception), 'test_simple already exists in repository')
 
     @data([[simple], 'test_simple', CriterionDefinition(TestSimpleCriterion, False)],
           [[single_argument], 'test_single_argument', CriterionDefinition(TestSingleArgumentCriterion, False)],

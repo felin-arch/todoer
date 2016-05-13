@@ -1,4 +1,5 @@
 from app.criteria import Criterion
+from app.criteria.logical import AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion
 from app.logger import log
 
 
@@ -49,3 +50,19 @@ class LabelsOfItemCriterion(Criterion):
         labels = [self.todoist_repository.get_label_by_id(label_id) for label_id in item['labels']]
         labels_of_item = [label for label in labels if label is not None]
         return self.criterion.applies_to(labels_of_item)
+
+
+class ItemAllCriterion(AllCriterion):
+    pass
+
+
+class ItemAnyCriterion(AnyCriterion):
+    pass
+
+
+class ItemNotCriterion(NotCriterion):
+    pass
+
+
+class ItemAnyOfCriterion(AnyOfCriterion):
+    pass

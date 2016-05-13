@@ -2,7 +2,10 @@ import inspect
 
 from app.criteria import Criterion
 from app.criteria.definition import CriterionDefinition
+from app.criteria.logical import AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion
 from app.util import NameConverter
+
+BASE_CRITERIA = [Criterion, AllCriterion, AnyCriterion, NotCriterion, AnyOfCriterion]
 
 
 class CriteriaRepository:
@@ -32,14 +35,14 @@ class CriteriaRepository:
 
     @staticmethod
     def _should_register_criterion(class_):
-        return issubclass(class_, Criterion) and class_ is not Criterion
+        return issubclass(class_, Criterion) and class_ not in BASE_CRITERIA
 
     def _register_criterion(self, criterion_name, class_):
         should_inject_todoist = self._should_inject_todoist_in_constructor(class_)
         criterion_name = NameConverter.convert_criterion_name(criterion_name)
 
         if criterion_name in self._repository.keys():
-            raise CriterionDefinitionCollisionError()
+            raise CriterionDefinitionCollisionError('{0} already exists in repository'.format(criterion_name))
 
         self._repository[criterion_name] = CriterionDefinition(class_, should_inject_todoist)
 

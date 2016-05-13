@@ -46,13 +46,13 @@ class TestCriterionFactory(unittest.TestCase):
         self.assertEquals(criterion.__dict__, {'project_name': 'Test'})
 
     def test_given_single_inner_criterion_constructs_correctly(self):
-        definition = {'not': {'true': ''}}
+        definition = {'item_not': {'true': ''}}
         criterion = self.criterion_factory.create(definition)
         self.assertIsInstance(criterion, NotCriterion)
         self.assertIsInstance(criterion.criterion, TrueCriterion)
 
     def test_given_multiple_inner_criteria_constructs_correctly(self):
-        definition = {'all': [{'true': ''}, {'false': ''}]}
+        definition = {'item_all': [{'true': ''}, {'false': ''}]}
         criterion = self.criterion_factory.create(definition)
         self.assertIsInstance(criterion, AllCriterion)
         self.assertIsInstance(criterion.criteria[0], TrueCriterion)
