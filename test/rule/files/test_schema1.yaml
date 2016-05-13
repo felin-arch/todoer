@@ -1,33 +1,23 @@
 $schema: http://json-schema.org/draft-04/schema#
 title: rules schema
-required:
-  - rules
 type: object
 properties:
-  rules:
-    type: array
-    items:
-      $ref: '#/definitions/Rule'
+  type:
+    enum:
+      - item
+  action:
+    $ref: '#/definitions/Actions/Action'
+  criterion:
+    $ref: '#/definitions/ItemCriteria/ItemCriterion'
+  name:
+    type: string
 additionalProperties: false
+required:
+  - name
+  - type
+  - criterion
+  - action
 definitions:
-  Rule:
-    type: object
-    properties:
-      type:
-        enum:
-          - item
-      action:
-        $ref: '#/definitions/Actions/Action'
-      criterion:
-        $ref: '#/definitions/ItemCriteria/ItemCriterion'
-      name:
-        type: string
-    additionalProperties: false
-    required:
-      - name
-      - type
-      - criterion
-      - action
   Actions:
     Action:
       type: object
