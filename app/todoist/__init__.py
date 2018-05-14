@@ -7,7 +7,7 @@ class TodoistRepository:
         self.api = todoist.TodoistAPI(self.token)
 
     def sync(self):
-        self.api.sync(resource_types=['items', 'labels', 'projects'])
+        self.api.sync()
 
     def commit(self):
         self.api.commit()
