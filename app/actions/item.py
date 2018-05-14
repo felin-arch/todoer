@@ -1,6 +1,11 @@
 from app.actions import Action
 
 
+class NullAction(Action):
+    def apply_to(self, _):
+        pass
+
+
 class AddLabelToItemAction(Action):
     def __init__(self, label):
         self.label = label
